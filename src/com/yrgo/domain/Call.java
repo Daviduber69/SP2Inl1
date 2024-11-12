@@ -19,16 +19,17 @@ public class Call {
 	private Date timeAndDate;
 
 	private String notes;
+	private String customerId;
 
-	public Call(String notes){
+	public Call(String notes, String customerId){
 		// this defaults to a timestamp of "now"
-		this (notes, new java.util.Date());
+		this (notes, new java.util.Date(), customerId);
 	}
 
-	public Call(String notes, Date timestamp){
-		// this defaults to a timestamp of "now"
-		this.timeAndDate = timestamp;
+	public Call(String notes, Date timeAndDate, String customerId) {
+		this.timeAndDate = timeAndDate;
 		this.notes = notes;
+		this.customerId = customerId;
 	}
 
 	public String toString()	{
@@ -50,6 +51,20 @@ public class Call {
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
+	public String getCustomerId() {
+		return customerId;
+	}
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
 	public Call() {}
 }

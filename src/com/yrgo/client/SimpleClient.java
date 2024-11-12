@@ -9,37 +9,38 @@ import com.yrgo.services.customers.CustomerNotFoundException;
 import com.yrgo.services.diary.DiaryManagementService;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 public class SimpleClient {
     public static void main(String[] args) {
         ClassPathXmlApplicationContext container = new ClassPathXmlApplicationContext("application.xml");
-        DiaryManagementService diaryService = container.getBean(DiaryManagementService.class);
+
+        CustomerManagementService customerService = container.getBean(CustomerManagementService.class);
         CallHandlingService callService = container.getBean(CallHandlingService.class);
+        DiaryManagementService diaryService = container.getBean(DiaryManagementService.class);
 
-        Call call = new Call("Kebabpizza femton minuter kvart");
-        Action action1 = new Action("Hämta kebabpizza om femton minuter kvart",new GregorianCalendar(2024,11,9)
-                , "David");
-        Action action2 = new Action("HÄMTA PIZZA FORT DET ÄR BROTTOM!!", new GregorianCalendar(2024, 11,10)
-                ,"David");
+        customerService.newCustomer(new Customer("420", "Acme", "Good Customer"));
 
-        List<Action>actions = new ArrayList();
+        Call newCall = new Call("Larry Wall called from Acme Corp","420");
+        Action action1 = new Action("Call back Larry to ask how things are going", new GregorianCalendar(2016, 0, 0), "rac");
+        Action action2 = new Action("Check our sales dept to make sure Larry is being tracked", new GregorianCalendar(2016, 0, 0), "rac");
+
+        List<Action> actions = new ArrayList<Action>();
         actions.add(action1);
         actions.add(action2);
 
-        try {
-            callService.recordCall("NV10", call, actions);
-        }catch(CustomerNotFoundException e) {
-            System.err.println("This customer does not exist.");
+        try{
+            callService.recordCall("420", newCall, actions);
+        }catch (CustomerNotFoundException e){
+            System.out.println("That customer doesn't exist");
         }
-        System.out.println("Here are the actions:");
-        Collection<Action> incompleteActions = diaryService.getAllIncompleteActions("David");
-        for(Action action:incompleteActions) {
-            System.out.println(action);
+
+        System.out.println("Here are the outstanding actions:");
+        Collection<Action> incompleteActions = diaryService.getAllIncompleteActions("rac");
+        for (Action next: incompleteActions){
+            System.out.println(next);
         }
+
         container.close();
     }
 }
