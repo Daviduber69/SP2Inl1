@@ -1,0 +1,6 @@
+ .idea/
+ BookStore-Maven.iml
+ CRM System.iml
+ database.dat.properties
+ database.dat.script
+ target/
