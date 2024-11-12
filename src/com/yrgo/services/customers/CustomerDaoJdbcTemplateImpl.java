@@ -6,8 +6,10 @@ import com.yrgo.dataaccess.CustomerRowMapper;
 import com.yrgo.dataaccess.RecordNotFoundException;
 import com.yrgo.domain.Call;
 import com.yrgo.domain.Customer;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerDaoJdbcTemplateImpl implements CustomerDao {
@@ -54,24 +56,37 @@ public class CustomerDaoJdbcTemplateImpl implements CustomerDao {
 
     @Override
     public Customer getById(String customerId) throws RecordNotFoundException {
-        return null;
+        try {
+            return template.queryForObject("select * from CUSTOMER where CUSTOMER_ID=?",new CustomerRowMapper(),customerId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new RecordNotFoundException();
+        }
     }
 
     @Override
     public List<Customer> getByName(String name) {
-        return null;
+        List<Customer> list = template.query("select * from CUSTOMER where COMPANY_NAME=?",new CustomerRowMapper(),name);
+        return list;
     }
 
     @Override
     public void update(Customer customerToUpdate) throws RecordNotFoundException {
-        this.template.update(UPDATE_SQL,customerToUpdate.getCustomerId(),customerToUpdate.getCompanyName(),
-                customerToUpdate.getEmail(), customerToUpdate.getTelephone(),
-                customerToUpdate.getNotes() );
+        try{
+            this.template.update(UPDATE_SQL,customerToUpdate.getCustomerId(),customerToUpdate.getCompanyName(),
+                    customerToUpdate.getEmail(), customerToUpdate.getTelephone(),
+                    customerToUpdate.getNotes() );
+        }catch (EmptyResultDataAccessException e){
+            throw new RecordNotFoundException();
+        }
     }
 
     @Override
     public void delete(Customer oldCustomer) throws RecordNotFoundException {
-        this.template.update(DELETE_SQL, oldCustomer.getCustomerId());
+        try{
+            this.template.update(DELETE_SQL, oldCustomer.getCustomerId());
+        }catch (EmptyResultDataAccessException e){
+            throw new RecordNotFoundException();
+        }
     }
 
     @Override
@@ -81,16 +96,22 @@ public class CustomerDaoJdbcTemplateImpl implements CustomerDao {
 
     @Override
     public Customer getFullCustomerDetail(String customerId) throws RecordNotFoundException {
-       Customer customer = template.queryForObject(CUSTOMER_DETAILS, new Object[]{customerId}, new CustomerRowMapper());
-        List<Call> calls = template.query(GET_CALL, new Object[]{customerId}, new CallRowMapper());
-        customer.setCalls(calls);
-        return customer;
+        try{
+            Customer customer = template.queryForObject(CUSTOMER_DETAILS, new Object[]{customerId}, new CustomerRowMapper());
+            List<Call> calls = template.query(GET_CALL, new Object[]{customerId}, new CallRowMapper());
+            customer.setCalls(calls);
+            return customer;
+        }catch (EmptyResultDataAccessException e){
+            throw new RecordNotFoundException();
+        }
     }
 
     @Override
     public void addCall(Call newCall, String customerId) throws RecordNotFoundException {
-
-        template.update(ADD_CALL, newCall.getNotes(), customerId);
-
+        try{
+            template.update(ADD_CALL, newCall.getNotes(), customerId);
+        }catch (EmptyResultDataAccessException e){
+            throw new RecordNotFoundException();
+        }
     }
 }
