@@ -1,4 +1,4 @@
-package com.yrgo.services.customers;
+package com.yrgo.dataaccess;
 
 import com.yrgo.dataaccess.CallRowMapper;
 import com.yrgo.dataaccess.CustomerDao;

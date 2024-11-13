@@ -2,7 +2,7 @@
             "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 
 <beans>
-	<bean id="customerDao" class="com.yrgo.services.customers.CustomerDaoJdbcTemplateImpl"
+	<bean id="customerDao" class="com.yrgo.dataaccess.CustomerDaoJdbcTemplateImpl"
 		  init-method="createTables">
 		<constructor-arg ref="jdbcTemplate"/>
 	</bean>
