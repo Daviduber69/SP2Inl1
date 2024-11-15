@@ -15,9 +15,9 @@ import java.util.List;
 public class CustomerDaoJdbcTemplateImpl implements CustomerDao {
     private static final String DELETE_SQL = "DELETE FROM CUSTOMER WHERE CUSTOMER_ID=?";
     private static final String UPDATE_SQL = "UPDATE CUSTOMER SET COMPANY_NAME=?, EMAIL=?, TELEPHONE=?,NOTES=? WHERE CUSTOMER_ID=?";
-    private static final String INSERT_SQL = "INSERT INTO CUSTOMER (CUSTOMER_ID, COMPANY_NAME, EMAIL, TELEPHONE, NOTES) VALUES (?,?,?,?,?)";
+    private static final String INSERT_SQL = "INSERT INTO CUSTOMER (CUSTOMER_ID, COMPANY_NAME, NOTES) VALUES (?,?,?)";
     private static final String GET_ALL_CUSTOMERS_SQL = "SELECT CUSTOMER_ID, COMPANY_NAME, EMAIL, TELEPHONE, NOTES FROM CUSTOMER";
-    private static final String CUSTOMER_DETAILS =  "SELECT CUSTOMER_ID, COMPANY_NAME, EMAIL, TELEPHONE, NOTES FROM CUSTOMER WHERE CUSTOMER_ID = ?";
+    private static final String CUSTOMER_DETAILS =  "SELECT CUSTOMER_ID, COMPANY_NAME, NOTES FROM CUSTOMER WHERE CUSTOMER_ID = ?";
     private static final String ADD_CALL =  "INSERT INTO TBL_CALL ( NOTES,CUSTOMER_ID) VALUES (?, ?)";
     private static final String GET_CALL = "SELECT NOTES, CUSTOMER_ID FROM TBL_CALL WHERE CUSTOMER_ID = ?";
 
@@ -30,7 +30,7 @@ public class CustomerDaoJdbcTemplateImpl implements CustomerDao {
     private void createTables() {
         try {
             this.template.update(
-                    "CREATE TABLE IF NOT EXISTS CUSTOMER (CUSTOMER_ID VARCHAR(50), COMPANY_NAME VARCHAR(255) NOT NULL,EMAIL VARCHAR(255),TELEPHONE VARCHAR(20),NOTES VARCHAR(500))"
+                    "CREATE TABLE IF NOT EXISTS CUSTOMER (CUSTOMER_ID VARCHAR(50), COMPANY_NAME VARCHAR(255) NOT NULL, NOTES VARCHAR(500))"
             );
         } catch (org.springframework.jdbc.BadSqlGrammarException e) {
             System.out.println("Assuming the Customer table exists");
@@ -50,7 +50,7 @@ public class CustomerDaoJdbcTemplateImpl implements CustomerDao {
 
     @Override
     public void create(Customer customer) {
-        template.update(INSERT_SQL,customer.getCustomerId(),customer.getCompanyName(),customer.getEmail(), customer.getTelephone(),
+        template.update(INSERT_SQL,customer.getCustomerId(),customer.getCompanyName(),
                 customer.getNotes());
     }
 
@@ -73,7 +73,6 @@ public class CustomerDaoJdbcTemplateImpl implements CustomerDao {
     public void update(Customer customerToUpdate) throws RecordNotFoundException {
         try{
             this.template.update(UPDATE_SQL,customerToUpdate.getCustomerId(),customerToUpdate.getCompanyName(),
-                    customerToUpdate.getEmail(), customerToUpdate.getTelephone(),
                     customerToUpdate.getNotes() );
         }catch (EmptyResultDataAccessException e){
             throw new RecordNotFoundException();
