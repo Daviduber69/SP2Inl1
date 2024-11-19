@@ -6,12 +6,15 @@ import com.yrgo.dataaccess.CustomerRowMapper;
 import com.yrgo.dataaccess.RecordNotFoundException;
 import com.yrgo.domain.Call;
 import com.yrgo.domain.Customer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
-
+@Repository
 public class CustomerDaoJdbcTemplateImpl implements CustomerDao {
     private static final String DELETE_SQL = "DELETE FROM CUSTOMER WHERE CUSTOMER_ID=?";
     private static final String UPDATE_SQL = "UPDATE CUSTOMER SET COMPANY_NAME=?, EMAIL=?, TELEPHONE=?,NOTES=? WHERE CUSTOMER_ID=?";
@@ -22,11 +25,11 @@ public class CustomerDaoJdbcTemplateImpl implements CustomerDao {
     private static final String GET_CALL = "SELECT NOTES, CUSTOMER_ID FROM TBL_CALL WHERE CUSTOMER_ID = ?";
 
     private JdbcTemplate template;
-
+    @Autowired
     public CustomerDaoJdbcTemplateImpl(JdbcTemplate template) {
         this.template = template;
     }
-
+    @PostConstruct
     private void createTables() {
         try {
             this.template.update(
