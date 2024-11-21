@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
-@Repository
+
 public class CustomerDaoJdbcTemplateImpl implements CustomerDao {
     private static final String DELETE_SQL = "DELETE FROM CUSTOMER WHERE CUSTOMER_ID=?";
     private static final String UPDATE_SQL = "UPDATE CUSTOMER SET COMPANY_NAME=?, EMAIL=?, TELEPHONE=?,NOTES=? WHERE CUSTOMER_ID=?";
@@ -25,7 +25,7 @@ public class CustomerDaoJdbcTemplateImpl implements CustomerDao {
     private static final String GET_CALL = "SELECT NOTES, CUSTOMER_ID FROM TBL_CALL WHERE CUSTOMER_ID = ?";
 
     private JdbcTemplate template;
-    @Autowired
+
     public CustomerDaoJdbcTemplateImpl(JdbcTemplate template) {
         this.template = template;
     }
