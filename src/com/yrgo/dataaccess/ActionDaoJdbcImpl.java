@@ -1,17 +1,12 @@
 package com.yrgo.dataaccess;
 
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Calendar;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
 import com.yrgo.domain.Action;
-import org.springframework.stereotype.Repository;
+
 
 
 public class ActionDaoJdbcImpl implements ActionDao {
